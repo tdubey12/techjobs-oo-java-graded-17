@@ -62,7 +62,7 @@ public class AbstractTest {
 
     protected int getJobId(Job job) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
         Class jobClass = getClassByName("Job");
-        Field idField = jobClass.getDeclaredField("id");
+        Field idField = jobClass.getSuperclass().getDeclaredField("id");
         idField.setAccessible(true);
         return idField.getInt(job);
     }

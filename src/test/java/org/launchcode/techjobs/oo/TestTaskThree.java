@@ -33,7 +33,7 @@ public class TestTaskThree extends AbstractTest {
         Class jobClass = getClassByName("Job");
         Constructor<Job> noArgConstructor = jobClass.getConstructor();
         Job job = noArgConstructor.newInstance();
-        Field idField = jobClass.getDeclaredField("id");
+        Field idField = jobClass.getSuperclass().getDeclaredField("id");
         idField.setAccessible(true);
         assertTrue(idField.getInt(job) != 0);
     }
@@ -44,7 +44,7 @@ public class TestTaskThree extends AbstractTest {
         Constructor<Job> noArgConstructor = jobClass.getConstructor();
         Job aJob = noArgConstructor.newInstance();
         Job anotherJob = noArgConstructor.newInstance();
-        Field idField = jobClass.getDeclaredField("id");
+        Field idField = jobClass.getSuperclass().getDeclaredField("id");
         idField.setAccessible(true);
         assertNotEquals(idField.getInt(aJob), idField.getInt(anotherJob));
     }
@@ -220,7 +220,7 @@ public class TestTaskThree extends AbstractTest {
                 "Core Competency");
 
         try {
-            Job.class.getDeclaredMethod("equals", Object.class);
+            Job.class.getSuperclass().getDeclaredMethod("equals", Object.class);
         } catch (NoSuchMethodException e) {
             fail("Job does not declare an equals method");
         }
@@ -230,7 +230,7 @@ public class TestTaskThree extends AbstractTest {
         assertNotEquals(getJobId(job), getJobId(anotherJob));
 
         // Use reflection to make both objects have the same id and test
-        Field anotherJobIdField = Job.class.getDeclaredField("id");
+        Field anotherJobIdField = Job.class.getSuperclass().getDeclaredField("id");
         anotherJobIdField.setAccessible(true);
         anotherJobIdField.set(anotherJob, getJobId(job));
         assertTrue(job.equals(anotherJob));
@@ -253,7 +253,7 @@ public class TestTaskThree extends AbstractTest {
         Method hashCodeMethod = null;
 
         try {
-            hashCodeMethod = Job.class.getDeclaredMethod("hashCode");
+            hashCodeMethod = Job.class.getSuperclass().getDeclaredMethod("hashCode");
         } catch (NoSuchMethodException e) {
             fail("Job does not declare an hashCode method");
         }
@@ -262,7 +262,7 @@ public class TestTaskThree extends AbstractTest {
         assertNotEquals(job.hashCode(), anotherJob.hashCode());
 
         // Use reflection to make both objects have the same id and test
-        Field anotherJobIdField = Job.class.getDeclaredField("id");
+        Field anotherJobIdField = Job.class.getSuperclass().getDeclaredField("id");
         anotherJobIdField.setAccessible(true);
         anotherJobIdField.set(anotherJob, getJobId(job));
         assertEquals(hashCodeMethod.invoke(job), hashCodeMethod.invoke(anotherJob));
